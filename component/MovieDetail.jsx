@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import movieListData from "../data/movieListData.json";
+import movieDetailData from "../data/movieDetailData.json";
 
 const MovieDetailWrapper = styled.div`
   display: flex;
@@ -41,7 +42,7 @@ const MovieInfo = styled.div`
 
   .genre {
     display: inline-block;
-    background-color: #007bff;
+    background-color: #65809d;
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
@@ -51,10 +52,25 @@ const MovieInfo = styled.div`
 `;
 
 const MovieDetail = () => {
+  // URL에서 동적 파라미터(id)를 추출하기 위해 useParams를 사용
   const { id } = useParams();
+
+  // 영화 장르 데이터를 매핑하기 위한 객체 생성
+  // movieDetailData.genres 배열의 각 장르 정보를 순회하며 id를 키로, name을 값으로 갖는 객체 생성
+  const genreMapping = movieDetailData.genres.reduce((acc, genre) => {
+    acc[genre.id] = genre.name;
+    return acc;
+  }, {});
+  // console.log(genreMapping);
+
   const movie = movieListData.results.find(
     (movie) => movie.id === parseInt(id)
   );
+
+  if (!movie || !movie.genre_ids) {
+    return <div>Loading...</div>;
+  }
+
   const posterUrl = `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`;
 
   return (
@@ -63,15 +79,14 @@ const MovieDetail = () => {
       <MovieInfo>
         <h1 className="title">{movie.title}</h1>
         <p className="vote">별점: {movie.vote_average}</p>
-        <p className="overview">줄거리: {movie.overview}</p>
         <div className="movie-genres">
-          {Array.isArray(movie.genres) && // genres가 배열인지 확인
-            movie.genres.map((genre) => (
-              <span key={genre.id} className="movie-genre">
-                {genre.name}
-              </span>
-            ))}
+          {movie.genre_ids.map((genreId) => (
+            <span key={genreId} className="genre">
+              {genreMapping[genreId] || "Unknown Genre"}
+            </span>
+          ))}
         </div>
+        <p className="overview">줄거리: {movie.overview}</p>
       </MovieInfo>
     </MovieDetailWrapper>
   );

@@ -7,8 +7,8 @@ import styled from "styled-components";
 const MovieListWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* 가운데 정렬 */
-  gap: 20px; /* 카드 간 간격 */
+  justify-content: center;
+  gap: 20px;
   padding: 20px;
 `;
 
@@ -16,19 +16,12 @@ const MainPageContainer = styled.div`
   text-align: center;
   padding: 20px;
 `;
-
-const MainPageTitle = styled.h1`
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 20px;
-`;
 function MainPage() {
   const [results] = useState(movieListData.results);
   // console.log(results);
 
   return (
     <MainPageContainer>
-      <MainPageTitle>Movie</MainPageTitle>
       <MovieListWrapper>
         {results.map((movie) => (
           <Link

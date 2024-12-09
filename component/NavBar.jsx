@@ -20,19 +20,33 @@ const StyledLink = styled(Link)`
   color: white;
   text-decoration: none;
   font-size: 1rem;
+  margin-top: 5px;
+  margin-right: 15px;
+  background-color: #6a6b7c;
+  padding: 10px;
+  border-radius: 5px;
 
   &:hover {
     text-decoration: underline;
   }
 `;
 
+const SearchInput = styled.input`
+  width: 700px;
+  height: 30px;
+  margin-right: 70px;
+  border-radius: 30px;
+  padding: 5px 14px;
+`;
+
 const NavBar = () => {
   return (
     <NavBarContainer>
-      <h1>Movie Explorer</h1>
+      <h1>MOVIE</h1>
       <NavLinks>
-        <StyledLink to="/">Home</StyledLink>
-        <StyledLink to="/about">About</StyledLink>
+        <SearchInput type="text" placeholder="Search..." />
+        <StyledLink to="/">로그인</StyledLink>
+        <StyledLink to="/about">회원가입</StyledLink>
       </NavLinks>
     </NavBarContainer>
   );
