@@ -1,13 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const MovieCardWrapper = styled.div`
-  width: 250px;
+  width: 200px;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   background-color: #fff;
-  margin: 20px;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
@@ -24,7 +24,7 @@ const MoviePoster = styled.img`
 `;
 
 const MovieTitle = styled.h3`
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #333;
   margin: 10px 0;
 `;
@@ -35,14 +35,15 @@ const MovieAverage = styled.p`
   margin-bottom: 15px;
 `;
 
-const MovieCard = ({ title, poster_path, vote_average }) => {
-  const posterUrl = `https://image.tmdb.org/t/p/w500${poster_path}`;
+const MovieCard = ({ id, title, poster_path, vote_average }) => {
+  const navigate = useNavigate();
+  const posterUrl = `https://image.tmdb.org/t/p/w200${poster_path}`;
 
   return (
-    <MovieCardWrapper>
+    <MovieCardWrapper onClick={() => navigate(`/details/${id}`)}>
       <MoviePoster src={posterUrl} alt={`${title} poster`} />
       <MovieTitle>{title}</MovieTitle>
-      <MovieAverage>⭐{vote_average}</MovieAverage>
+      <MovieAverage>⭐ {vote_average}</MovieAverage>
     </MovieCardWrapper>
   );
 };

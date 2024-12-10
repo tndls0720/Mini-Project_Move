@@ -1,8 +1,6 @@
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
-// import { useParams } from "react-router-dom";
-// import movieListData from "../data/movieListData.json";
-import movieDetailData from "../data/movieDetailData.json";
-import { useState } from "react";
 
 const MovieDetailWrapper = styled.div`
   display: flex;
@@ -52,39 +50,53 @@ const MovieInfo = styled.div`
   }
 `;
 
+// TMDb API 정보
+const API_BASE_URL = "https://api.themoviedb.org/3";
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+
 const MovieDetail = () => {
-  const [movieDetail] = useState(movieDetailData);
-  //   // URL에서 동적 파라미터(id)를 추출하기 위해 useParams를 사용
-  //   const { id } = useParams();
+  const { id } = useParams(); // URL에서 영화 ID 추출
+  const [movie, setMovie] = useState([]);
 
-  // 영화 장르 데이터를 매핑하기 위한 객체 생성
-  // movieDetailData.genres 배열의 각 장르 정보를 순회하며 id를 키로, name을 값으로 갖는 객체 생성
-  // const genreMapping = movieDetailData.genres.reduce((acc, genre) => {
-  //   acc[genre.id] = genre.name;
-  //   return acc;
-  // }, {});
-  // console.log(genreMapping);
+  useEffect(() => {
+    const fetchMovieDetail = async () => {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/movie/${id}?api_key=${API_KEY}&language=en-US&language=ko-KR`
+        );
+        const data = await response.json();
+        setMovie(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    };
 
-  // const movie = movieDetailData.genres.find(
-  //   (movie) => movie.id === parseInt(id)
-  // );
+    fetchMovieDetail();
+  }, []);
 
-  // if (!movie || !movie.genre_ids) {
+  // 로딩 상태 처리
+  // if (!movie) {
   //   return <div>Loading...</div>;
   // }
 
-  const posterUrl = `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`;
-
   return (
     <MovieDetailWrapper>
-      <img src={posterUrl} alt={`${movieDetail.title} Poster`} />
+      <img
+        src={`https://image.tmdb.org/t/p/w500${movie?.poster_path}`}
+        alt={`${movie?.title} Poster`}
+      />
       <MovieInfo>
-        <h1 className="title">{movieDetail.title}</h1>
-        <p className="vote">별점: {movieDetail.vote_average}</p>
+        <h1 className="title">{movie?.title}</h1>
+        <p className="vote">⭐ {movie?.vote_average}</p>
         <div className="movie-genres">
-          {movieDetail.genres.map((genre) => genre.name)}
+          {movie?.genre_ids?.map((genre) => (
+            <span key={genre.id} className="genre">
+              {genre.name}
+            </span>
+          ))}
         </div>
-        <p className="overview">줄거리: {movieDetail.overview}</p>
+        <p className="overview">{movie?.overview}</p>
       </MovieInfo>
     </MovieDetailWrapper>
   );
