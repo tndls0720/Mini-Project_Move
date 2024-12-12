@@ -1,50 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import useDebounce from "./useDebounce";
 
-const NavBarContainer = styled.nav`
-  background-color: #1c1c1c;
-  color: white;
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
+const NavBar = ({ onSearch }) => {
+  const [searchText, setSearchText] = useState("");
 
-const NavLinks = styled.div`
-  display: flex;
-  gap: 15px;
-`;
+  const devounceSearchText = useDebounce(searchText, 5000);
 
-const StyledLink = styled(Link)`
-  color: white;
-  text-decoration: none;
-  font-size: 1rem;
-  margin-top: 5px;
-  margin-right: 15px;
-  background-color: #6a6b7c;
-  padding: 10px;
-  border-radius: 5px;
+  useEffect(() => {
+    if (devounceSearchText.trim()) {
+      onSearch(devounceSearchText);
+    }
+  }, [devounceSearchText, onSearch]);
 
-  &:hover {
-    text-decoration: underline;
-  }
-`;
+  const handleChange = (e) => {
+    setSearchText(e.target.value);
+  };
 
-const SearchInput = styled.input`
-  width: 700px;
-  height: 30px;
-  margin-right: 70px;
-  border-radius: 30px;
-  padding: 5px 14px;
-`;
-
-const NavBar = () => {
   return (
     <NavBarContainer>
-      <h1>MOVIE</h1>
+      {/* 헤더 제목에 Link 추가 */}
+      <StyledTitle to="/">MOVIE</StyledTitle>
       <NavLinks>
-        <SearchInput type="text" placeholder="Search..." />
+        <SearchInput
+          type="text"
+          placeholder="Search..."
+          value={searchText}
+          onChange={handleChange}
+        />
         <StyledLink to="/">로그인</StyledLink>
         <StyledLink to="/about">회원가입</StyledLink>
       </NavLinks>
@@ -53,3 +37,53 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
+// 스타일 컴포넌트
+const NavBarContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #333;
+  color: white;
+`;
+
+const StyledTitle = styled(Link)`
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffcc00;
+  text-decoration: none;
+  transition: transform 0.2s, color 0.2s;
+
+  &:hover {
+    color: #ffffff;
+    transform: scale(1.1); /* 크기 확대 */
+  }
+`;
+
+const NavLinks = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const SearchInput = styled.input`
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background-color: #ffcc00;
+    color: #333;
+  }
+`;

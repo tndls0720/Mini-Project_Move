@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MovieCard from "../component/MovieCard";
 
-const API_BASE_URL = "https://api.themoviedb.org/3";
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-
 const Wrapper = styled.div`
   padding: 20px;
 `;
@@ -24,6 +21,9 @@ const MovieListWrapper = styled.div`
   list-style: none;
   padding: 0;
 `;
+
+const API_BASE_URL = "https://api.themoviedb.org/3";
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 const MovieList = () => {
   const [movies, setMovies] = useState([]);
